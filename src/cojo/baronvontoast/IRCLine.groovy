@@ -51,7 +51,7 @@ class IRCLine {
     static String assemble(String command, List<String> params, String trailing) {
         StringBuilder sb = new StringBuilder(command)
 
-        params.each {
+        params.each { it ->
             sb.append(' ')
             sb.append(it)
         }
@@ -72,6 +72,15 @@ class IRCLine {
      */
     static String assemble(String command, String... params) {
         assemble(command, Arrays.asList(params), null)
+    }
+
+    /**
+     * Assemble a PRIVMSG
+     * @param params
+     * @return
+     */
+    static String privmsg(String channel, String message) {
+        assemble("PRIVMSG $channel", null, message)
     }
 
     /**

@@ -62,6 +62,11 @@ abstract class ConnectionImpl {
         threadSendMessages.dispatch(contents)
     }
 
+    final sendPrivmsg(String channel, String msg) {
+        println IRCLine.privmsg(channel, msg)
+        sendToServer IRCLine.privmsg(channel, msg)
+    }
+
     def start() {
         threadReceiveMessages.start()
         threadSendMessages.start()
