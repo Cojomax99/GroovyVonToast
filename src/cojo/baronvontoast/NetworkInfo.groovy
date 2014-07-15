@@ -7,21 +7,27 @@ import groovy.json.JsonSlurper
  */
 class NetworkInfo {
     /** The port number to connect to on this network */
-    def int port;
+    int port;
 
     /** Hostname to connect to on this network */
-    def String hostname;
+    String hostname
 
     /** Channels to join on startup */
-    def channels;
+    def channels = []
+
+    NetworkInfo(String fileLoc) {
+        load(fileLoc)
+    }
 
     /** Load data into variables from the JSON file */
-    def load() {
-       // def slurper = new JsonSlurper(new File("networks.json"));
-        //TODO make this json
+    def load(String fileLoc) {
+        def jsonFile = new File(fileLoc)
+        Object json = new JsonSlurper().parseText(jsonFile.text)
+        List list = (List)json
+        Map map = (Map)list.get(0)
 
-        port = 6667
-        hostname = "irc.rozznet.net"
-        channels = {"#BOT"}
+        port = map.get("port")
+        hostname = map.get("hostname")
+        channels = map.get("channels")
     }
 }

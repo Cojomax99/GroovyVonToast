@@ -10,17 +10,17 @@ class ThreadReceiveMessages extends Thread {
 
     def isRunning = false
 
-    def BufferedReader bufferedReader
+    BufferedReader bufferedReader
 
-    def ConnectionImpl connection
+    ConnectionImpl connection
 
-    public ThreadReceiveMessages(ConnectionImpl connection, BufferedReader reader) {
+    ThreadReceiveMessages(ConnectionImpl connection, BufferedReader reader) {
         this.bufferedReader = reader
         this.connection = connection
     }
 
     @Override
-    public void run() {
+    void run() {
         isRunning = true;
 
         def loggedIn = false
@@ -41,22 +41,24 @@ class ThreadReceiveMessages extends Thread {
             }
 
             while ((msg = bufferedReader.readLine()) != null) {
-                def IRCLine line = IRCLine.parse(msg)
-
-                println (line.raw)
+                IRCLine line = IRCLine.parse(msg)
 
                 if (line.getCommand() == "PING") {
                     dispatch("PONG :" + line.getParam(0))
                 }
 
                 if (line.getCommand() == "376") {
-                    dispatch("JOIN #TROPICRAFT")
+                    connection.onMOTD(line)
+                }
+
+                if (line.getCommand() == "PRIVMSG") {
+                    connection.onPRIVMSG(line)
                 }
             }
         }
     }
 
-    def dispatch(def message) {
+    def dispatch(String message) {
         connection.sendToServer(message)
     }
 }

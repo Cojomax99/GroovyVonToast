@@ -1,0 +1,7 @@
+[
+    {
+        "port":6667,
+        "hostname":"irc.esper.net",
+        "channels": [ "#BrojoBot", "#Tropicraft" ]
+    }
+]

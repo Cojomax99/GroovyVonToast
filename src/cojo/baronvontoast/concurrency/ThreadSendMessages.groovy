@@ -11,22 +11,25 @@ class ThreadSendMessages extends Thread{
 
     def isRunning
 
-    def bufferedWriter
+    BufferedWriter bufferedWriter
+
+    ConnectionImpl connection
 
     /**
      * Queue the messages are added to before they are sent. Thread-safe :D
      * TODO: Make this use Message instead of String
      */
-    def ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<String>()
+    ConcurrentLinkedQueue<String> messageQueue = new ConcurrentLinkedQueue<String>()
 
-    public ThreadSendMessages(ConnectionImpl connection, BufferedWriter writer) {
+    ThreadSendMessages(ConnectionImpl connection, BufferedWriter writer) {
         super("ThreadSendMessages")
+        this.connection = connection
         isRunning = false
         bufferedWriter = writer
     }
 
     @Override
-    public void run() {
+    void run() {
         isRunning = true
 
         try {
@@ -59,7 +62,7 @@ class ThreadSendMessages extends Thread{
         }
     }
 
-    def dispatch(def message) {
+    def dispatch(String message) {
         messageQueue.offer(message)
     }
 }
